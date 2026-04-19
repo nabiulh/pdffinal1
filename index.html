@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Professional Word Editor - Ultimate Version</title>
+    
+    <!-- ================= PWA & NATIVE APP META TAGS ================= -->
+    <meta name="application-name" content="Word Pro">
+    <meta name="apple-mobile-web-app-title" content="Word Pro">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1e293b">
+    
+    <!-- iOS App Icon -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='38' fill='%232563EB'/%3E%3Cpath fill='white' d='M52 135l19-67 15 45 15-45 19 67h-13l-11-39-9 34-9-34-11 39z'/%3E%3C/svg%3E">
+    <!-- Dynamic Manifest Link -->
+    <link rel="manifest" id="dynamic-manifest">
+    <!-- ============================================================== -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts Imports (10 Bengali & 20 English Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Old & Core Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Galada&family=Hind+Siliguri:wght@300;400;500;600;700&family=Mina:wght@400;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Tiro+Bangla:ital@0;1&family=Cinzel:wght@700;900&family=Montserrat:wght@600;700&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+    <!-- New Bengali Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@300;400;600&family=Baloo+Da+2:wght@400;600&family=Atma:wght@400;600&family=Noto+Serif+Bengali:wght@400;600&family=Mukta+Mahee:wght@400;600&display=swap" rel="stylesheet">
+    <!-- New English Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Open+Sans:wght@400;600&family=Lato:wght@400;700&family=Poppins:wght@400;600&family=Playfair+Display:wght@400;700&family=Dancing+Script:wght@600&family=Pacifico&family=Caveat:wght@600&family=Righteous&family=Lobster&family=Bebas+Neue&family=Anton&family=Josefin+Sans:wght@400;600&family=Fira+Code:wght@400;600&family=Baskervville:ital@0;1&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            /* Dynamic border positioning variables */
+            --b-top: 5mm;
+            --b-right: 5mm;
+            --b-bottom: 10mm;
+            --b-left: 5mm;
+        }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            /* Default Standard Font */
+            font-family: 'Calibri', 'Hind Siliguri', sans-serif;
+            background-color: #f1f5f9; 
+            margin: 0;
+            overflow-x: hidden; 
+            overflow-y: auto; 
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- Dark Mode Styles --- */
+        body.dark-mode { background-color: #0f172a; color: #f8fafc; }
+        body.dark-mode .app-header { background-color: #1e293b; border-bottom-color: #334155; }
+        body.dark-mode .app-toolbar { background-color: #0f172a; border-bottom-color: #334155; }
+        body.dark-mode .editor-container { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); background-color: #1e293b; color: #f8fafc; border-color: #334155;}
+        body.dark-mode .toolbar-btn-light { background-color: #334155; color: #e2e8f0; border-color: #475569; }
+        body.dark-mode .toolbar-btn-light:hover { background-color: #475569; color: #fff; }
+        body.dark-mode .modal-bg { background-color: #1e293b; color: #f8fafc; }
+        body.dark-mode .history-item { background-color: #334155; border-color: #475569; }
+        body.dark-mode .status-bar { background-color: #1e293b; border-top-color: #334155; }
+        body.dark-mode select { background-color: #1e293b; color: #e2e8f0; }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.03); }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.25); border-radius: 5px; border: 2px solid transparent; background-clip: content-box; }
+        ::-webkit-scrollbar-thumb:hover { background-color: rgba(0,0,0,0.4); }
+
+        /* --- Premium Toolbar Buttons --- */
+        .toolbar-btn-light {
+            background: #ffffff; border: 1px solid #e2e8f0; padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
+            color: #334155; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; font-size: 14px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .toolbar-btn-light:hover { background: #f8fafc; color: #0f172a; border-color: #cbd5e1; transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .toolbar-btn-light:active { transform: translateY(0); }
+        
+        .btn-preview { background-color: #e0e7ff; color: #3730a3; border-color: #c7d2fe; }
+        .btn-preview:hover { background-color: #c7d2fe; color: #312e81; }
+        .btn-print { background-color: #ffedd5; color: #9a3412; border-color: #fed7aa; }
+        .btn-print:hover { background-color: #fed7aa; color: #7c2d12; }
+        .btn-pdf { background-color: #ffe4e6; color: #9f1239; border-color: #fecdd3; }
+        .btn-pdf:hover { background-color: #fecdd3; color: #881337; }
+        .btn-history { background-color: #ccfbf1; color: #0f766e; border-color: #99f6e4; }
+        .btn-history:hover { background-color: #99f6e4; color: #115e59; }
+
+        /* --- Main Editor Container --- */
+        .editor-container {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            margin: 0 auto; outline: none; transition: all 0.3s;
+            position: relative; box-sizing: border-box;
+            /* Dimensions dynamically handled by JS */
+        }
+        .editor-container:focus-within { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+        
+        #inputText { white-space: pre-wrap; outline: none; min-height: 100%; padding-bottom: 20px; }
+        #inputText:empty:before { content: attr(data-placeholder); color: #94a3b8; cursor: text; font-style: italic; }
+        #inputText div, #inputText p { margin-bottom: 0.8em; break-inside: auto; }
+
+        /* --- Paper Styling --- */
+        .a4-paper {
+            background-color: #ffffff;
+            box-sizing: border-box; width: 100%;
+            margin: 0 auto; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
+            line-height: 1.6; font-size: 11pt; 
+            text-align: left; 
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; position: relative;
+            /* Dimensions dynamically handled by JS */
+        }
+        .a4-paper table.content-table { border-collapse: collapse; width: 100%; table-layout: fixed; color: inherit; font-size: inherit; line-height: inherit; }
+        .a4-paper table.content-table td { padding: 0; vertical-align: top; border: none; }
+        
+        thead.doc-header-group { display: table-header-group; }
+        #formattedContent { font-size: inherit; }
+
+        /* ================= SMART SPACING LOGIC ================= */
+        .w-spacing-100 { word-spacing: normal; }
+        .w-spacing-75 { word-spacing: -0.5px; }
+        .w-spacing-50 { word-spacing: -1px; }
+        .w-spacing-25 { word-spacing: -1.5px; }
+
+        .l-spacing-200 { line-height: 2.0; }
+        .l-spacing-200 p, .l-spacing-200 div { margin-bottom: 1.0em !important; margin-top: 0 !important; }
+        .l-spacing-150 { line-height: 1.6; }
+        .l-spacing-150 p, .l-spacing-150 div { margin-bottom: 0.8em !important; margin-top: 0 !important; }
+        .l-spacing-115 { line-height: 1.15; }
+        .l-spacing-115 p, .l-spacing-115 div { margin-bottom: 0.5em !important; margin-top: 0 !important; }
+        .l-spacing-100 { line-height: 1.0; }
+        .l-spacing-100 p, .l-spacing-100 div { margin-bottom: 0.3em !important; margin-top: 0.1em !important; }
+        .l-spacing-80 { line-height: 0.8; }
+        .l-spacing-80 p, .l-spacing-80 div { margin-bottom: 0.15em !important; margin-top: 0.1em !important; }
+
+        .w-spacing-25 b, .w-spacing-50 b { display: inline-block; margin-top: 2px; }
+        .two-columns { column-count: 2; column-gap: 12mm; column-rule: 1px solid #e2e8f0; column-fill: balance; }
+        
+        .header-hidden .doc-header-group { display: none !important; }
+        .compact-header { border-bottom: 1.5px solid currentColor; color: inherit; opacity: 0.95; padding-bottom: 5px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: flex-end; position: relative;}
+
+        /* --- 3D Text Styling --- */
+        .text-3d { text-shadow: 1px 1px 0px #cbd5e1, 2px 2px 0px #94a3b8; }
+
+        /* --- Smart Page Border Logic (Perfect 5mm gap outside text area) --- */
+        .page-border-active::before {
+            content: "";
+            position: absolute;
+            top: var(--b-top);
+            right: var(--b-right);
+            bottom: var(--b-bottom);
+            left: var(--b-left);
+            border: 1.5px solid #94a3b8;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .pdf-generating.page-border-active::before {
+            display: none !important; /* Hide HTML border during PDF, JS will draw a flawless vector border */
+        }
+
+        /* --- Watermark Styles (For App Screen) --- */
+        .editor-container::after, .a4-paper::after {
+            content: "";
+            position: absolute;
+            bottom: var(--b-bottom);
+            right: var(--b-right);
+            width: 40mm; /* Increased size */
+            height: 40mm; /* Increased size */
+            background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh-HtvamBy4ZwbH_pFX2xLDApllF5u2r9CwBVXdm3afDUXji3hp73OEPrBZMyKPAiuAmxB2LI3uoE1dYcBO0kGplmp3TD7gzmCUbTxQyhMK9M6H9YDGvXg4f3h9Sn9q3iOOdb7EbTyhlWeeQ3iHLbB8S-4thcbeMik6tengwnhxXvO_wf6LBHSDuFQhBeM/s1056/1000194080.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .pdf-generating::after {
+            display: none !important;
+        }
+        
+        .watermark-stamp-print { display: none; }
+        
+        /* Watermark Toggle Hidden Classes */
+        .watermark-hidden::after { display: none !important; }
+        .watermark-hidden-print { display: none !important; }
+
+        /* --- Print Optimization --- */
+        @media print {
+            body { background: transparent !important; overflow: visible; margin: 0; padding: 0; }
+            #editor-screen, .preview-header, #toast, #historyModal, #floatingScrollArrows { display: none !important; }
+            #preview-screen { display: block !important; background: transparent !important; overflow: visible !important; height: auto !important; padding: 0 !important; position: static !important; }
+            
+            @page { size: auto; margin: 10mm 10mm 15mm 10mm; } 
+            
+            @page :left { @bottom-center { content: counter(page); font-weight: bold; font-family: sans-serif; font-size: 12pt; } }
+            @page :right { @bottom-center { content: counter(page); font-weight: bold; font-family: sans-serif; font-size: 12pt; } }
+            
+            .a4-paper { 
+                box-shadow: none !important; 
+                margin: 0 auto !important; 
+                padding: 0mm !important; 
+                color: #000 !important;
+                background-color: transparent !important; 
+                print-color-adjust: exact !important; 
+                -webkit-print-color-adjust: exact !important; 
+            }
+            
+            .text-3d { text-shadow: 1px 1px 0px #cccccc, 2px 2px 0px #999999; }
+            .page-border-active::before { border-color: #000 !important; }
+
+            /* 100% Fix for Watermark in Print: Using absolute physical image instead of background CSS */
+            .watermark-stamp-print {
+                display: block !important;
+                position: fixed !important;
+                bottom: var(--b-bottom) !important;
+                right: var(--b-right) !important;
+                width: 40mm !important; /* Increased size */
+                height: 40mm !important; /* Increased size */
+                opacity: 0.15 !important;
+                pointer-events: none !important;
+                z-index: 9999 !important; 
+            }
+            .editor-container::after, .a4-paper::after {
+                display: none !important;
+            }
+            .watermark-hidden-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- Print Only Watermark Overlay (100% Works inside window.print) -->
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh-HtvamBy4ZwbH_pFX2xLDApllF5u2r9CwBVXdm3afDUXji3hp73OEPrBZMyKPAiuAmxB2LI3uoE1dYcBO0kGplmp3TD7gzmCUbTxQyhMK9M6H9YDGvXg4f3h9Sn9q3iOOdb7EbTyhlWeeQ3iHLbB8S-4thcbeMik6tengwnhxXvO_wf6LBHSDuFQhBeM/s1056/1000194080.png" class="watermark-stamp-print" id="printWatermarkImg" alt="Watermark">
+
+    <!-- ================= PWA DYNAMIC INSTALLATION SYSTEM ================= -->
+    <script>
+        (function initPWA() {
+            // 1. Create and inject a valid Manifest for "Standalone APK" feel
+            const manifestJSON = {
+                "name": "Word Pro Editor",
+                "short_name": "Word Pro",
+                "description": "Professional Word Editor System",
+                "start_url": window.location.href.split('?')[0],
+                "display": "standalone", // Makes it look like a native app (No browser bar)
+                "orientation": "portrait-primary",
+                "background_color": "#f1f5f9",
+                "theme_color": "#1e293b",
+                "icons": [
+                    {
+                        "src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%232563EB'/%3E%3Cpath fill='white' d='M140 360l50-180 40 120 40-120 50 180h-35l-30-105-25 90-25-90-30 105z'/%3E%3C/svg%3E",
+                        "sizes": "512x512",
+                        "type": "image/svg+xml",
+                        "purpose": "any maskable"
+                    },
+                    {
+                        "src": "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='38' fill='%232563EB'/%3E%3Cpath fill='white' d='M52 135l19-67 15 45 15-45 19 67h-13l-11-39-9 34-9-34-11 39z'/%3E%3C/svg%3E",
+                        "sizes": "192x192",
+                        "type": "image/svg+xml",
+                        "purpose": "any maskable"
+                    }
+                ]
+            };
+            
+            const manifestBlob = new Blob([JSON.stringify(manifestJSON)], { type: 'application/json' });
+            document.getElementById('dynamic-manifest').href = URL.createObjectURL(manifestBlob);
+
+            // 2. Register a dummy Service Worker to satisfy Chrome's PWA install criteria
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    const swCode = `
+                        self.addEventListener('install', (e) => { self.skipWaiting(); });
+                        self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
+                        self.addEventListener('fetch', (e) => {
+                            e.respondWith(fetch(e.request).catch(() => new Response('Word Pro Offline Mode Active')));
+                        });
+                    `;
+                    const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                    navigator.serviceWorker.register(URL.createObjectURL(swBlob))
+                        .then(() => console.log('PWA Native App Setup Completed.'))
+                        .catch(err => console.log('PWA Setup note:', err));
+                });
+            }
+        })();
+    </script>
+    <!-- =================================================================== -->
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-6 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-6 py-3 rounded-full shadow-2xl transition-all duration-300 opacity-0 pointer-events-none z-[100] flex items-center gap-2 font-bold tracking-wide">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- ================= FLOATING SCROLL ARROWS ================= -->
+    <div id="floatingScrollArrows" class="fixed right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 z-[90]">
+        <button onclick="scrollToTop()" class="w-12 h-12 bg-blue-600/90 text-white rounded-full shadow-[0_10px_20px_rgba(37,99,235,0.3)] backdrop-blur flex items-center justify-center hover:bg-blue-700 hover:scale-110 transition-all border-2 border-white dark:border-slate-700" title="Go to top">
+            <i class="fa-solid fa-arrow-up text-xl"></i>
+        </button>
+        <button onclick="scrollToBottom()" class="w-12 h-12 bg-blue-600/90 text-white rounded-full shadow-[0_10px_20px_rgba(37,99,235,0.3)] backdrop-blur flex items-center justify-center hover:bg-blue-700 hover:scale-110 transition-all border-2 border-white dark:border-slate-700" title="Go to bottom">
+            <i class="fa-solid fa-arrow-down text-xl"></i>
+        </button>
+    </div>
+
+    <!-- ================= EDITOR SCREEN ================= -->
+    <div id="editor-screen" class="flex flex-col min-h-screen w-full">
+        
+        <div class="sticky top-0 z-50 shadow-md">
+            <!-- 1. TOP HEADER -->
+            <div class="app-header bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center transition-colors">
+                <div class="flex items-center gap-2">
+                    <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-2 rounded-lg flex items-center justify-center shadow-md">
+                        <i class="fa-solid fa-file-word text-xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-black text-gray-800 hidden sm:block tracking-wide dark:text-white">Word <span class="text-blue-600">Pro</span></h1>
+                </div>
+
+                <div class="flex items-center gap-2 md:gap-3 flex-wrap justify-end">
+                    <button onclick="openHistoryModal()" class="toolbar-btn-light btn-history">
+                        <i class="fa-solid fa-clock-rotate-left"></i> <span class="hidden md:inline ml-1">History</span>
+                    </button>
+                    <div class="w-px h-6 bg-gray-300 mx-1 hidden sm:block"></div>
+                    
+                    <!-- Share Dropdown Button -->
+                    <div class="relative inline-block text-left" id="shareDropdownContainer">
+                        <button onclick="toggleShareDropdown()" class="toolbar-btn-light btn-preview shadow-sm">
+                            <i class="fa-solid fa-share-nodes"></i> <span class="hidden sm:inline ml-1">Share</span>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div id="shareDropdown" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg hidden z-50 overflow-hidden dark:bg-slate-800 dark:border-slate-600">
+                            <button onclick="downloadPDF(); toggleShareDropdown();" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-slate-700 flex items-center gap-2 font-bold">
+                                <i class="fa-solid fa-file-pdf text-red-500"></i> PDF Format
+                            </button>
+                            <button onclick="downloadWord(); toggleShareDropdown();" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-slate-700 flex items-center gap-2 font-bold">
+                                <i class="fa-solid fa-file-word text-blue-500"></i> Word Format
+                            </button>
+                        </div>
+                    </div>
+
+                    <button onclick="window.print()" class="toolbar-btn-light btn-print shadow-sm">
+                        <i class="fa-solid fa-print"></i> <span class="hidden sm:inline ml-1">Print</span>
+                    </button>
+                    
+                    <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                    <button id="themeToggle" class="toolbar-btn-light px-3" title="Dark Mode">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. TOOLBAR (WORD RIBBON) -->
+            <div class="app-toolbar bg-slate-50 border-b border-gray-200 px-4 py-2.5 flex flex-wrap gap-x-3 gap-y-2 items-center transition-colors">
+                
+                <!-- NEW: Paper Size & Margins Box -->
+                <div class="flex items-center gap-1 bg-white border border-gray-300 rounded-lg p-1 shadow-sm dark:bg-slate-800 dark:border-slate-600">
+                    <select id="pageSizeSelector" onchange="changePageSize(this.value)" class="bg-transparent outline-none text-sm cursor-pointer font-bold text-teal-700 dark:text-teal-400 px-1" title="Paper Size">
+                        <option value="a4,portrait,210,297" selected>Size: A4 (Default)</option>
+                        <option value="a3,portrait,297,420">Size: A3</option>
+                        <option value="letter,portrait,215.9,279.4">Size: Letter</option>
+                        <option value="legal,portrait,215.9,355.6">Size: Legal</option>
+                        <option value="a5,portrait,148,210">Size: A5</option>
+                        <option value="a4,landscape,297,210">Size: 2-in-1 (Landscape)</option>
+                    </select>
+                    <div class="w-px h-5 bg-gray-300 mx-1 dark:bg-slate-600"></div>
+                    <select id="marginSelector" onchange="changeMargin(this.value)" class="bg-transparent outline-none text-sm cursor-pointer font-bold text-teal-700 dark:text-teal-400 px-1" title="Page Margins">
+                        <option value="10,10,15,10" selected>Margin: Default</option>
+                        <option value="0.5,0.5,5,0.5">Margin: Ultra Narrow (0.5mm)</option>
+                        <option value="5,5,10,5">Margin: Very Narrow (5mm)</option>
+                        <option value="12.7,12.7,17.7,12.7">Margin: Narrow</option>
+                        <option value="25.4,19.1,30.4,19.1">Margin: Moderate</option>
+                        <option value="25.4,25.4,30.4,25.4">Margin: Normal</option>
+                        <option value="25.4,50.8,30.4,50.8">Margin: Wide</option>
+                        <option value="15,15,20,15">Margin: Custom 1 (15mm)</option>
+                        <option value="20,20,25,20">Margin: Custom 2 (20mm)</option>
+                        <option value="0,0,5,0">Margin: None (0mm)</option>
+                    </select>
+                </div>
+
+                <!-- Font & Size Box -->
+                <div class="flex items-center gap-1 bg-white border border-gray-300 rounded-lg p-1 shadow-sm dark:bg-slate-800 dark:border-slate-600 ml-1">
+                    <select id="fontSelector" onchange="changeFontFamily(this.value)" class="bg-transparent outline-none text-sm cursor-pointer font-bold text-gray-700 dark:text-gray-200 px-1 w-32 md:w-auto" title="Select to change font">
+                        <option value="Calibri" selected>Calibri (Default)</option>
+                        <optgroup label="Bengali Fonts (10)">
+                            <option value="Hind Siliguri">Hind Siliguri (Standard)</option>
+                            <option value="Noto Sans Bengali">Noto Sans (Standard)</option>
+                            <option value="Tiro Bangla">Tiro Bangla (Serif)</option>
+                            <option value="Mina">Mina (Modern)</option>
+                            <option value="Anek Bangla">Anek Bangla (Standard)</option>
+                            <option value="Noto Serif Bengali">Noto Serif (Standard)</option>
+                            <option value="Mukta Mahee">Mukta Mahee (Clean)</option>
+                            <option value="Baloo Da 2">Baloo Da 2 (Stylish)</option>
+                            <option value="Atma">Atma (Stylish)</option>
+                            <option value="Galada">Galada (Stylistic)</option>
+                        </optgroup>
+                        <optgroup label="English Fonts (20)">
+                            <option value="Arial">Arial (Standard)</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Roboto">Roboto (Standard)</option>
+                            <option value="Open Sans">Open Sans (Clean)</option>
+                            <option value="Lato">Lato (Modern)</option>
+                            <option value="Poppins">Poppins (Geometric)</option>
+                            <option value="Montserrat">Montserrat (Stylish)</option>
+                            <option value="Playfair Display">Playfair Display (Elegant)</option>
+                            <option value="Baskervville">Baskerville (Classic)</option>
+                            <option value="Cinzel">Cinzel (Cinematic)</option>
+                            <option value="Oswald">Oswald (Bold)</option>
+                            <option value="Anton">Anton (Impact)</option>
+                            <option value="Bebas Neue">Bebas Neue (Display)</option>
+                            <option value="Josefin Sans">Josefin Sans (Vintage)</option>
+                            <option value="Righteous">Righteous (Art Deco)</option>
+                            <option value="Pacifico">Pacifico (Handwriting)</option>
+                            <option value="Dancing Script">Dancing Script (Stylish)</option>
+                            <option value="Caveat">Caveat (Casual)</option>
+                            <option value="Lobster">Lobster (Retro)</option>
+                        </optgroup>
+                    </select>
+                    <div class="w-px h-5 bg-gray-300 mx-1 dark:bg-slate-600"></div>
+                    <select id="sizeSelector" onchange="changeFontSize(this.value)" class="bg-transparent outline-none text-sm cursor-pointer font-bold text-gray-700 dark:text-gray-200 px-1" title="Size">
+                        <option value="" disabled>Size</option>
+                        <option value="10px">10</option>
+                        <option value="11pt" selected>11 (Default)</option>
+                        <option value="12px">12</option>
+                        <option value="14px">14</option>
+                        <option value="16px">16</option>
+                        <option value="18px">18</option>
+                        <option value="20px">20</option>
+                        <option value="24px">24</option>
+                        <option value="28px">28</option>
+                    </select>
+                </div>
+
+                <!-- Text Formatting -->
+                <div class="flex items-center gap-1">
+                    <button onmousedown="event.preventDefault();" onclick="execCmd('bold')" class="toolbar-btn-light w-9 h-9 p-0 text-lg" title="Bold (Ctrl+B)"><i class="fa-solid fa-bold"></i></button>
+                    <button onmousedown="event.preventDefault();" onclick="execCmd('italic')" class="toolbar-btn-light w-9 h-9 p-0 text-lg" title="Italic (Ctrl+I)"><i class="fa-solid fa-italic"></i></button>
+                    <button onmousedown="event.preventDefault();" onclick="execCmd('underline')" class="toolbar-btn-light w-9 h-9 p-0 text-lg" title="Underline (Ctrl+U)"><i class="fa-solid fa-underline"></i></button>
+                    <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                    <button onmousedown="event.preventDefault();" onclick="execCmd('justifyLeft')" class="toolbar-btn-light w-9 h-9 p-0" title="Align Left"><i class="fa-solid fa-align-left"></i></button>
+                    <button onmousedown="event.preventDefault();" onclick="execCmd('justifyCenter')" class="toolbar-btn-light w-9 h-9 p-0" title="Align Center"><i class="fa-solid fa-align-center"></i></button>
+                    <button onmousedown="event.preventDefault();" onclick="execCmd('justifyRight')" class="toolbar-btn-light w-9 h-9 p-0" title="Align Right"><i class="fa-solid fa-align-right"></i></button>
+                </div>
+
+                <!-- SPACING & LAYOUT Box -->
+                <div class="flex items-center gap-1 bg-blue-50 border border-blue-200 rounded-lg p-1 shadow-sm dark:bg-blue-900/40 dark:border-blue-800 ml-1 flex-wrap">
+                    <select id="lineSpacingSelector" onchange="changeLineSpacing(this.value)" class="bg-transparent outline-none text-sm cursor-pointer font-bold text-blue-800 dark:text-blue-300 px-1" title="Line Spacing">
+                        <option value="200">Line: Double</option>
+                        <option value="150" selected>Line: Normal</option>
+                        <option value="115">Line: Light</option>
+                        <option value="100">Line: Single</option>
+                        <option value="80">Line: Compact</option>
+                    </select>
+                    <div class="w-px h-5 bg-blue-300 mx-1 dark:bg-blue-700"></div>
+                    <select id="wordSpacingSelector" onchange="changeWordSpacing(this.value)" class="bg-transparent outline-none text-sm cursor-pointer font-bold text-blue-800 dark:text-blue-300 px-1" title="Word Spacing">
+                        <option value="100" selected>Word: 100%</option>
+                        <option value="75">Word: 75%</option>
+                        <option value="50">Word: 50%</option>
+                        <option value="25">Word: 25%</option>
+                    </select>
+                    <div class="w-px h-5 bg-blue-300 mx-1 dark:bg-blue-700"></div>
+                    <button id="columnToggle" class="toolbar-btn-light bg-transparent border-none text-blue-800 dark:text-blue-300 px-2 gap-1 text-sm font-bold shadow-none hover:shadow-none hover:bg-blue-100 dark:hover:bg-blue-800">
+                        <i class="fa-solid fa-table-columns"></i> 2 Columns
+                    </button>
+                    <div class="w-px h-5 bg-blue-300 mx-1 dark:bg-blue-700"></div>
+                    <button id="headerToggle" class="toolbar-btn-light bg-transparent border-none text-blue-800 dark:text-blue-300 px-2 gap-1 text-sm font-bold shadow-none hover:shadow-none hover:bg-blue-100 dark:hover:bg-blue-800">
+                        <i class="fa-solid fa-heading"></i> Header <span id="headerStatus">ON</span>
+                    </button>
+                    <!-- BORDER TOGGLE -->
+                    <div class="w-px h-5 bg-blue-300 mx-1 dark:bg-blue-700"></div>
+                    <button id="borderToggle" class="toolbar-btn-light bg-transparent border-none text-blue-800 dark:text-blue-300 px-2 gap-1 text-sm font-bold shadow-none hover:shadow-none hover:bg-blue-100 dark:hover:bg-blue-800">
+                        <i class="fa-regular fa-square"></i> Border <span id="borderStatus">OFF</span>
+                    </button>
+                    <!-- WATERMARK TOGGLE (NEW) -->
+                    <div class="w-px h-5 bg-blue-300 mx-1 dark:bg-blue-700"></div>
+                    <button id="watermarkToggle" class="toolbar-btn-light bg-transparent border-none text-blue-800 dark:text-blue-300 px-2 gap-1 text-sm font-bold shadow-none hover:shadow-none bg-blue-100 dark:bg-blue-800">
+                        <i class="fa-solid fa-stamp"></i> W.Mark <span id="watermarkStatus">ON</span>
+                    </button>
+                </div>
+
+                <!-- Magic Tools -->
+                <div class="flex items-center gap-2 ml-auto">
+                    <button onclick="applyAutoBold()" class="toolbar-btn-light bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100 dark:bg-purple-900/50 dark:text-purple-300 dark:border-purple-800 shadow-sm" title="Auto-bold headings and points">
+                        <i class="fa-solid fa-heading"></i> <span class="hidden xl:inline ml-1 font-bold">Auto Bold</span>
+                    </button>
+                    <button onclick="autoFixGrammar()" class="toolbar-btn-light bg-green-50 text-green-700 border-green-200 hover:bg-green-100 dark:bg-green-900/50 dark:text-green-300 dark:border-green-800 shadow-sm" title="Auto-fix spaces and punctuation">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> <span class="hidden xl:inline ml-1 font-bold">Auto Fix</span>
+                    </button>
+                    <button onclick="clearText()" class="toolbar-btn-light bg-red-50 text-red-600 border-red-200 hover:bg-red-100 dark:bg-red-900/40 dark:text-red-400 dark:border-red-800 shadow-sm" title="Clear all text">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. MAIN WORKSPACE -->
+        <div class="flex-1 p-2 sm:p-4 md:p-10 flex justify-center pb-24 z-0">
+            <div class="editor-container rounded-sm w-spacing-100 l-spacing-150 relative" id="editorBg">
+                
+                <table class="w-full h-full content-table relative z-10">
+                    <thead class="doc-header-group">
+                        <tr>
+                            <td>
+                                <div class="compact-header">
+                                    <div class="flex flex-col gap-1 border-l-[3px] border-green-800 pl-2">
+                                        <span class="uppercase text-gray-800 font-extrabold tracking-wide flex items-center gap-1.5" style="font-family: 'Montserrat', sans-serif; font-size: 10px;">
+                                            <i class="fa-solid fa-phone-volume text-[11px] text-green-800"></i> 9874818757
+                                        </span>
+                                        <span class="uppercase text-gray-800 font-extrabold tracking-wide flex items-center gap-1.5" style="font-family: 'Montserrat', sans-serif; font-size: 10px;">
+                                            <i class="fa-solid fa-pen-nib text-[11px] text-green-800"></i> By Nabiul Sir
+                                        </span>
+                                    </div>
+                                    <div class="absolute left-1/2 transform -translate-x-1/2 text-center pb-1">
+                                        <span class="font-black uppercase text-gray-900 text-3d" style="font-family: 'Cinzel', serif; font-size: 20px; letter-spacing: 1px;">RADIANT LEARNERS HUB</span>
+                                    </div>
+                                    <div class="flex flex-col items-end gap-[3px] shrink-0 text-right">
+                                        <span class="font-bold text-gray-800 uppercase border-b border-gray-400 pb-[1px]" style="font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 0.5px;">INTEGRATED STUDY MATERIALS</span>
+                                        <span class="text-gray-600 font-bold headerDate" style="font-family: 'Montserrat', sans-serif; font-size: 9px;"></span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="align-top pt-2">
+                                <div id="inputText" 
+                                     contenteditable="true" 
+                                     spellcheck="true"
+                                     autocorrect="on"
+                                     class="text-base h-full outline-none" 
+                                     data-placeholder="Type or paste your text here... Double click to open system keyboard."></div>
+                                
+                                <div id="editorTheEndMarker" class="hidden mt-8 mb-4 text-center">
+                                    <div class="flex items-center justify-center gap-4 opacity-70">
+                                        <div class="h-[1.5px] w-12 bg-current"></div>
+                                        <span class="font-bold uppercase tracking-[0.25em]" style="font-family: 'Cinzel', serif; font-size: 12px;">The End</span>
+                                        <div class="h-[1.5px] w-12 bg-current"></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="text-center text-xs opacity-40 mt-4 italic">Page numbers (1, 2, 3...) will be added automatically at the bottom center of each page when downloaded as PDF.</div>
+            </div>
+        </div>
+
+        <!-- 4. BOTTOM STATUS BAR -->
+        <div class="status-bar fixed bottom-0 w-full bg-white border-t border-gray-200 px-6 py-2 flex justify-between items-center text-xs font-semibold text-gray-500 z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+            <div class="flex gap-4">
+                <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-md border border-blue-100 dark:bg-blue-900/40 dark:border-blue-800 dark:text-blue-300">
+                    <i class="fa-solid fa-chart-bar mr-1"></i> Word Count: <span id="wordCount" class="font-bold text-sm">0</span>
+                </span>
+            </div>
+            <div class="hidden sm:block">RADIANT LEARNERS HUB System <i class="fa-solid fa-check-circle text-green-500 ml-1"></i></div>
+        </div>
+
+    </div>
+
+    <!-- ================= HIDDEN PREVIEW SCREEN FOR PDF/WORD EXPORT ================= -->
+    <div id="preview-screen" class="hidden">
+        <div id="a4-preview" class="a4-paper w-spacing-100 l-spacing-150 relative">
+            <table class="w-full h-full content-table relative z-10">
+                <thead class="doc-header-group">
+                    <tr>
+                        <td>
+                            <div class="compact-header">
+                                <div class="flex flex-col gap-1 border-l-[3px] border-green-800 pl-2">
+                                    <span class="uppercase text-gray-800 font-extrabold tracking-wide flex items-center gap-1.5" style="font-family: 'Montserrat', sans-serif; font-size: 10px;">
+                                        <i class="fa-solid fa-phone-volume text-[11px] text-green-800"></i> 9874818757
+                                    </span>
+                                    <span class="uppercase text-gray-800 font-extrabold tracking-wide flex items-center gap-1.5" style="font-family: 'Montserrat', sans-serif; font-size: 10px;">
+                                        <i class="fa-solid fa-pen-nib text-[11px] text-green-800"></i> By Nabiul Sir
+                                    </span>
+                                </div>
+                                <div class="absolute left-1/2 transform -translate-x-1/2 text-center pb-1">
+                                    <span class="font-black uppercase text-gray-900 text-3d" style="font-family: 'Cinzel', serif; font-size: 20px; letter-spacing: 1px;">RADIANT LEARNERS HUB</span>
+                                </div>
+                                <div class="flex flex-col items-end gap-[3px] shrink-0 text-right">
+                                    <span class="font-bold text-gray-800 uppercase border-b border-gray-400 pb-[1px]" style="font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 0.5px;">INTEGRATED STUDY MATERIALS</span>
+                                    <span class="text-gray-600 font-bold headerDate" style="font-family: 'Montserrat', sans-serif; font-size: 9px;"></span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="align-top pt-2">
+                            <div id="formattedContent" class="break-words"></div>
+                            <div id="previewTheEndMarker" class="hidden mt-8 mb-4 text-center">
+                                <div class="flex items-center justify-center gap-4 opacity-70">
+                                    <div class="h-[1.5px] w-12 bg-current"></div>
+                                    <span class="font-bold uppercase tracking-[0.25em]" style="font-family: 'Cinzel', serif; font-size: 12px;">The End</span>
+                                    <div class="h-[1.5px] w-12 bg-current"></div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= HISTORY MODAL ================= -->
+    <div id="historyModal" class="hidden fixed inset-0 bg-black/70 z-[110] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="modal-bg bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[85vh] transform transition-transform">
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50 dark:bg-slate-800">
+                <h2 class="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-teal-600"></i> Work History
+                </h2>
+                <button onclick="closeHistoryModal()" class="text-gray-500 hover:text-red-500 text-xl transition-colors"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="historyList" class="p-4 overflow-y-auto flex-1 flex flex-col gap-3 custom-scroll"></div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // Set dynamic date to headers
+        const dateOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+        const todayFormatted = new Date().toLocaleDateString('en-GB', dateOptions);
+        document.querySelectorAll('.headerDate').forEach(el => {
+            el.innerText = "Date: " + todayFormatted;
+        });
+
+        // Global Variables for Dynamic Size & Margins
+        let currentPaperSize = { format: 'a4', orientation: 'portrait', w: 210, h: 297 };
+        let currentMargin = { t: 10, r: 10, b: 15, l: 10 }; 
+        let isWatermarkActive = true; // NEW Variable for Watermark state
+
+        // ================= WATERMARK PRE-LOADER FOR PDF (100% CORS FIX) =================
+        let watermarkBase64 = null;
+        const watermarkImgUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh-HtvamBy4ZwbH_pFX2xLDApllF5u2r9CwBVXdm3afDUXji3hp73OEPrBZMyKPAiuAmxB2LI3uoE1dYcBO0kGplmp3TD7gzmCUbTxQyhMK9M6H9YDGvXg4f3h9Sn9q3iOOdb7EbTyhlWeeQ3iHLbB8S-4thcbeMik6tengwnhxXvO_wf6LBHSDuFQhBeM/s1056/1000194080.png";
+        
+        function fetchWatermarkForPDF() {
+            // Blob technique to bypass Canvas tainting completely
+            const processBlob = (blob) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement("canvas");
+                        canvas.width = img.width || 500;
+                        canvas.height = img.height || 500;
+                        const ctx = canvas.getContext("2d");
+                        ctx.globalAlpha = 0.15; // Set watermark opacity 15%
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        try {
+                            watermarkBase64 = canvas.toDataURL("image/png");
+                            console.log("Watermark Successfully Loaded for PDF!");
+                        } catch(e) {
+                            console.error("Canvas toDataURL failed:", e);
+                        }
+                    };
+                    img.src = reader.result; // Loading from safe local blob data URL
+                };
+                reader.readAsDataURL(blob);
+            };
+
+            // Using AllOrigins Proxy to avoid direct CORS block
+            fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent(watermarkImgUrl))
+                .then(res => res.blob())
+                .then(processBlob)
+                .catch(() => {
+                    console.warn("Proxy failed, trying direct load...");
+                    fetch(watermarkImgUrl)
+                        .then(res => res.blob())
+                        .then(processBlob)
+                        .catch(err => console.error("Watermark Fetching entirely failed:", err));
+                });
+        }
+        window.addEventListener('load', fetchWatermarkForPDF);
+        // ==============================================================================
+
+        const inputText = document.getElementById('inputText');
+        const formattedContent = document.getElementById('formattedContent');
+        const a4Paper = document.getElementById('a4-preview');
+        const editorBg = document.getElementById('editorBg');
+        const editorTheEndMarker = document.getElementById('editorTheEndMarker');
+        const previewTheEndMarker = document.getElementById('previewTheEndMarker');
+        
+        const themeToggle = document.getElementById('themeToggle');
+        const columnToggle = document.getElementById('columnToggle');
+        const headerToggle = document.getElementById('headerToggle');
+        const headerStatus = document.getElementById('headerStatus');
+        const borderToggle = document.getElementById('borderToggle');
+        const borderStatus = document.getElementById('borderStatus');
+        
+        // NEW WATERMARK VARIABLES
+        const watermarkToggleBtn = document.getElementById('watermarkToggle');
+        const watermarkStatusSpan = document.getElementById('watermarkStatus');
+        const printWatermarkImg = document.getElementById('printWatermarkImg');
+
+        const editorScreen = document.getElementById('editor-screen');
+        const previewScreen = document.getElementById('preview-screen');
+        const historyModal = document.getElementById('historyModal');
+
+        // PAGE SIZE & MARGINS SYSTEM
+        function changePageSize(val) {
+            const [format, orientation, w, h] = val.split(',');
+            currentPaperSize = { format, orientation, w: parseFloat(w), h: parseFloat(h) };
+            
+            const widthCSS = currentPaperSize.w + 'mm';
+            const heightCSS = currentPaperSize.h + 'mm';
+            
+            editorBg.style.width = '100%';
+            editorBg.style.maxWidth = widthCSS;
+            editorBg.style.minHeight = heightCSS;
+            
+            a4Paper.style.width = '100%';
+            a4Paper.style.maxWidth = widthCSS;
+            a4Paper.style.minHeight = heightCSS;
+            
+            showToast(`Page size changed to ${format.toUpperCase()}`);
+        }
+
+        function changeMargin(val) {
+            const [t, r, b, l] = val.split(',').map(Number);
+            currentMargin = { t, r, b, l };
+            
+            const paddingCSS = `${t}mm ${r}mm ${b}mm ${l}mm`;
+            
+            editorBg.style.padding = paddingCSS;
+            a4Paper.style.padding = paddingCSS;
+            
+            const safeGap = 5; 
+            document.documentElement.style.setProperty('--b-top', Math.max(0, t - safeGap) + 'mm');
+            document.documentElement.style.setProperty('--b-right', Math.max(0, r - safeGap) + 'mm');
+            document.documentElement.style.setProperty('--b-bottom', Math.max(0, b - safeGap) + 'mm');
+            document.documentElement.style.setProperty('--b-left', Math.max(0, l - safeGap) + 'mm');
+            
+            showToast("Margins updated successfully!");
+        }
+
+        // Initialize Defaults rigidly on page load
+        changePageSize("a4,portrait,210,297");
+        changeMargin("10,10,15,10");
+
+        // Share Dropdown Logic
+        function toggleShareDropdown() {
+            const dropdown = document.getElementById('shareDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', function(event) {
+            const container = document.getElementById('shareDropdownContainer');
+            const dropdown = document.getElementById('shareDropdown');
+            if (container && !container.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Double Click to Focus and bring Keyboard
+        inputText.addEventListener('dblclick', function() {
+            this.focus();
+            let range = document.createRange();
+            let sel = window.getSelection();
+            range.selectNodeContents(this);
+            range.collapse(false);
+            sel.removeAllRanges();
+            sel.addRange(range);
+            showToast("Editor is ready for typing!");
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.remove('opacity-0', '-translate-y-4');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-4');
+            }, 3000);
+        }
+
+        function execCmd(cmd, value=null) {
+            document.execCommand(cmd, false, value);
+            updateContent();
+        }
+
+        function changeFontFamily(fontName) {
+            const editor = document.getElementById('inputText');
+            editor.style.fontFamily = fontName;
+            
+            const elements = editor.querySelectorAll('*');
+            elements.forEach(el => {
+                if (el.style.fontFamily) el.style.fontFamily = '';
+                if (el.hasAttribute('face')) el.removeAttribute('face');
+            });
+            
+            updateContent();
+            showToast("Font changed successfully!");
+        }
+
+        function changeFontSize(sizeValue) {
+            const editor = document.getElementById('inputText');
+            editor.style.fontSize = sizeValue;
+            
+            const elements = editor.querySelectorAll('*');
+            elements.forEach(el => {
+                if (el.style.fontSize) el.style.fontSize = '';
+                if (el.hasAttribute('size')) el.removeAttribute('size');
+            });
+            
+            updateContent();
+            showToast("Font size changed successfully!");
+        }
+
+        function clearText() {
+            if(confirm("Are you sure you want to delete all text? You can save it in history before deleting.")) {
+                inputText.innerHTML = '';
+                updateContent();
+            }
+        }
+
+        function changeWordSpacing(level) {
+            a4Paper.classList.remove('w-spacing-100', 'w-spacing-75', 'w-spacing-50', 'w-spacing-25');
+            editorBg.classList.remove('w-spacing-100', 'w-spacing-75', 'w-spacing-50', 'w-spacing-25');
+            
+            const targetClass = `w-spacing-${level}`;
+            a4Paper.classList.add(targetClass);
+            editorBg.classList.add(targetClass); 
+            updateContent();
+        }
+
+        function changeLineSpacing(level) {
+            a4Paper.classList.remove('l-spacing-200', 'l-spacing-150', 'l-spacing-115', 'l-spacing-100', 'l-spacing-80');
+            editorBg.classList.remove('l-spacing-200', 'l-spacing-150', 'l-spacing-115', 'l-spacing-100', 'l-spacing-80');
+            
+            const targetClass = `l-spacing-${level}`;
+            a4Paper.classList.add(targetClass);
+            editorBg.classList.add(targetClass); 
+            updateContent();
+        }
+
+        function openHistoryModal() {
+            renderHistoryList();
+            historyModal.classList.remove('hidden');
+        }
+
+        function closeHistoryModal() {
+            historyModal.classList.add('hidden');
+        }
+
+        function renderHistoryList() {
+            const historyList = document.getElementById('historyList');
+            let histories = JSON.parse(localStorage.getItem('wordProHistories') || '[]');
+
+            if(histories.length === 0) {
+                historyList.innerHTML = `<div class="text-center text-gray-500 py-6"><i class="fa-solid fa-folder-open text-3xl mb-2 opacity-50"></i><br>No saved history!</div>`;
+                return;
+            }
+
+            historyList.innerHTML = histories.map(item => `
+                <div class="history-item bg-white border border-gray-200 p-3 rounded-xl shadow-sm flex justify-between items-center gap-3">
+                    <div class="flex-1 overflow-hidden">
+                        <p class="font-bold text-gray-800 dark:text-gray-200 truncate text-sm">${item.title}</p>
+                        <p class="text-xs text-gray-500 mt-1"><i class="fa-regular fa-clock"></i> ${item.date}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="loadHistory(${item.id})" class="px-3 py-1.5 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-lg text-sm font-bold transition-colors">
+                            <i class="fa-solid fa-folder-open"></i> Open
+                        </button>
+                        <button onclick="deleteHistory(${item.id})" class="px-3 py-1.5 bg-red-100 text-red-600 hover:bg-red-200 rounded-lg text-sm transition-colors">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadHistory(id) {
+            if(confirm("Opening this will overwrite current text. Are you sure?")) {
+                let histories = JSON.parse(localStorage.getItem('wordProHistories') || '[]');
+                const history = histories.find(h => h.id === id);
+                if(history) {
+                    inputText.innerHTML = history.content;
+                    updateContent();
+                    closeHistoryModal();
+                    showToast("History restored!");
+                }
+            }
+        }
+
+        function deleteHistory(id) {
+            if(confirm("Delete this history?")) {
+                let histories = JSON.parse(localStorage.getItem('wordProHistories') || '[]');
+                histories = histories.filter(h => h.id !== id);
+                localStorage.setItem('wordProHistories', JSON.stringify(histories));
+                renderHistoryList();
+            }
+        }
+
+        function applyAutoBold() {
+            Array.from(inputText.childNodes).forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '') {
+                    let div = document.createElement('div');
+                    div.innerHTML = node.textContent;
+                    inputText.replaceChild(div, node);
+                }
+            });
+
+            Array.from(inputText.children).forEach(node => {
+                processNodeForBold(node);
+            });
+
+            updateContent();
+            showToast("Auto-bold applied!");
+        }
+
+        function processNodeForBold(node) {
+            if (node.querySelector('b, strong') || ['B', 'STRONG'].includes(node.tagName)) return;
+
+            let text = node.innerText.trim();
+            if (!text) return;
+
+            let isHeading = text.length > 1 && text.length <= 65 && !/[।\.!\?]$/.test(text) && !text.includes('\n');
+            if (isHeading) {
+                node.innerHTML = `<b>${node.innerHTML}</b>`;
+                return;
+            }
+
+            const pointRegex = /^((?:\d+|[\u09E6-\u09EF]+)[\.\)]|প্রশ্ন\s*\d*\s*[:\-]|Q\s*\d*\s*[:\-]|উঃ\s*[:\-]|Ans\s*[:\-]|[\-\*]\s+)/i;
+            if (pointRegex.test(text)) {
+                replacePrefixWithBold(node, pointRegex);
+            }
+        }
+
+        function replacePrefixWithBold(element, regex) {
+            for (let i = 0; i < element.childNodes.length; i++) {
+                let child = element.childNodes[i];
+                if (child.nodeType === 3) {
+                    if (regex.test(child.nodeValue)) {
+                        let newHtml = child.nodeValue.replace(regex, '<b>$1</b> ');
+                        let span = document.createElement('span');
+                        span.innerHTML = newHtml;
+                        element.replaceChild(span, child);
+                        while(span.firstChild) element.insertBefore(span.firstChild, span);
+                        element.removeChild(span);
+                        return true; 
+                    }
+                } else if (child.nodeType === 1) {
+                    if (replacePrefixWithBold(child, regex)) return true;
+                }
+            }
+            return false;
+        }
+
+        function autoFixGrammar() {
+            let node = inputText;
+            function processTextNodes(element) {
+                for (let i = 0; i < element.childNodes.length; i++) {
+                    let child = element.childNodes[i];
+                    if (child.nodeType === 3) { 
+                        let text = child.nodeValue;
+                        text = text.replace(/\s+([,.:;!?।])/g, '$1');
+                        text = text.replace(/([,.:;!?।])(?=[^\s"'\)])/g, '$1 ');
+                        text = text.replace(/ {2,}/g, ' ');
+                        text = text.replace(/(^\s*|[.!?]\s+)([a-z])/g, function(match, p1, p2) { 
+                            return p1 + p2.toUpperCase(); 
+                        });
+                        child.nodeValue = text;
+                    } else if (child.nodeType === 1) { 
+                        processTextNodes(child);
+                    }
+                }
+            }
+            processTextNodes(node);
+            updateContent(); 
+            showToast("Spaces and punctuation fixed!");
+        }
+
+        inputText.addEventListener('paste', (e) => {
+            e.preventDefault();
+            let text = (e.originalEvent || e).clipboardData.getData('text/plain');
+            
+            text = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>'); 
+            text = text.replace(/\*(.*?)\*/g, '<i>$1</i>'); 
+            text = text.replace(/#(.*?)\n/g, '<b>$1</b><br>'); 
+            text = text.replace(/\n/g, '<br>'); 
+
+            document.execCommand('insertHTML', false, text);
+            updateContent();
+        });
+
+        inputText.addEventListener('input', updateContent);
+
+        function updateContent() {
+            formattedContent.innerHTML = inputText.innerHTML;
+            
+            formattedContent.style.fontFamily = inputText.style.fontFamily;
+            formattedContent.style.fontSize = inputText.style.fontSize;
+            
+            const textContent = inputText.innerText || inputText.textContent;
+            const words = textContent.trim() ? textContent.trim().split(/\s+/).length : 0;
+            document.getElementById('wordCount').innerText = words;
+
+            if (words > 0) {
+                editorTheEndMarker.classList.remove('hidden');
+                previewTheEndMarker.classList.remove('hidden');
+            } else {
+                editorTheEndMarker.classList.add('hidden');
+                previewTheEndMarker.classList.add('hidden');
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const icon = themeToggle.querySelector('i');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                showToast("Dark mode enabled!");
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                showToast("Light mode enabled!");
+            }
+        });
+
+        columnToggle.addEventListener('click', () => {
+            formattedContent.classList.toggle('two-columns');
+            inputText.classList.toggle('two-columns');
+            
+            if (formattedContent.classList.contains('two-columns')) {
+                columnToggle.classList.add('bg-blue-100', 'dark:bg-blue-800');
+                showToast("2 Column layout enabled!");
+            } else {
+                columnToggle.classList.remove('bg-blue-100', 'dark:bg-blue-800');
+                showToast("Single column layout enabled!");
+            }
+        });
+
+        headerToggle.addEventListener('click', () => {
+            editorBg.classList.toggle('header-hidden');
+            a4Paper.classList.toggle('header-hidden');
+            
+            if (editorBg.classList.contains('header-hidden')) {
+                headerStatus.innerText = 'OFF';
+                headerToggle.classList.add('text-gray-500');
+                headerToggle.classList.remove('text-blue-800', 'dark:text-blue-300');
+                showToast("Header hidden!");
+            } else {
+                headerStatus.innerText = 'ON';
+                headerToggle.classList.remove('text-gray-500');
+                headerToggle.classList.add('text-blue-800', 'dark:text-blue-300');
+                showToast("Header visible!");
+            }
+        });
+
+        // BORDER SYSTEM
+        borderToggle.addEventListener('click', () => {
+            editorBg.classList.toggle('page-border-active');
+            a4Paper.classList.toggle('page-border-active');
+            
+            if (editorBg.classList.contains('page-border-active')) {
+                borderStatus.innerText = 'ON';
+                borderToggle.classList.add('bg-blue-100', 'dark:bg-blue-800');
+                showToast("Page border enabled (outside text)!");
+            } else {
+                borderStatus.innerText = 'OFF';
+                borderToggle.classList.remove('bg-blue-100', 'dark:bg-blue-800');
+                showToast("Page border disabled!");
+            }
+        });
+        
+        // ================= WATERMARK TOGGLE SYSTEM (NEW) =================
+        watermarkToggleBtn.addEventListener('click', () => {
+            isWatermarkActive = !isWatermarkActive;
+            
+            if (isWatermarkActive) {
+                editorBg.classList.remove('watermark-hidden');
+                a4Paper.classList.remove('watermark-hidden');
+                printWatermarkImg.classList.remove('watermark-hidden-print');
+                
+                watermarkStatusSpan.innerText = 'ON';
+                watermarkToggleBtn.classList.add('bg-blue-100', 'dark:bg-blue-800');
+                showToast("Watermark enabled!");
+            } else {
+                editorBg.classList.add('watermark-hidden');
+                a4Paper.classList.add('watermark-hidden');
+                printWatermarkImg.classList.add('watermark-hidden-print');
+                
+                watermarkStatusSpan.innerText = 'OFF';
+                watermarkToggleBtn.classList.remove('bg-blue-100', 'dark:bg-blue-800');
+                showToast("Watermark disabled!");
+            }
+        });
+
+        // ================= PERFECT PDF EXPORT =================
+        function downloadPDF() {
+            showToast("Generating PDF, please wait...");
+            previewScreen.classList.remove('hidden'); 
+            const element = document.getElementById('a4-preview');
+            
+            element.classList.add('pdf-generating');
+            const isBorderActive = element.classList.contains('page-border-active');
+            
+            const formatArr = [currentPaperSize.w, currentPaperSize.h];
+            const opt = {
+                margin:       [currentMargin.t, currentMargin.r, currentMargin.b, currentMargin.l], 
+                filename:     'word-pro-document.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: formatArr, orientation: currentPaperSize.orientation }
+            };
+
+            html2pdf().set(opt).from(element).toPdf().get('pdf').then(function (pdf) {
+                var totalPages = pdf.internal.getNumberOfPages();
+                for (var i = 1; i <= totalPages; i++) {
+                    pdf.setPage(i);
+                    var pw = pdf.internal.pageSize.getWidth();
+                    var ph = pdf.internal.pageSize.getHeight();
+                    
+                    // Add Page Number dynamically adjusting based on bottom margin
+                    pdf.setFont("times", "bold");
+                    pdf.setFontSize(12);
+                    pdf.setTextColor(0, 0, 0); 
+                    var text = i.toString(); 
+                    var centerX = pw / 2;
+                    
+                    var y = ph - Math.max(7, currentMargin.b / 2); 
+                    if(currentMargin.b < 5) y = ph - 2; 
+                    
+                    pdf.text(text, centerX, y, { align: 'center' });
+                    
+                    // ================= PDF WATERMARK INJECTION =================
+                    // Only run if Watermark is toggled ON
+                    if (watermarkBase64 && isWatermarkActive) {
+                        var stampW = 40; // 40mm width (Increased Size)
+                        var stampH = 40; // 40mm height (Increased Size)
+                        var stampX = pw - currentMargin.r - stampW;
+                        var stampY = ph - currentMargin.b - stampH;
+                        
+                        try {
+                            pdf.addImage(watermarkBase64, 'PNG', stampX, stampY, stampW, stampH);
+                        } catch(err) {
+                            console.error("PDF Watermark Injection Error:", err);
+                        }
+                    }
+                    
+                    // ================= PDF BORDER FIX =================
+                    if (isBorderActive) {
+                        pdf.setDrawColor(0, 0, 0);
+                        pdf.setLineWidth(0.4); 
+                        
+                        let borderGap = 5; 
+                        
+                        let offsetT = Math.max(0, currentMargin.t - borderGap);
+                        let offsetL = Math.max(0, currentMargin.l - borderGap);
+                        let offsetR = Math.max(0, currentMargin.r - borderGap);
+                        let offsetB = Math.max(0, currentMargin.b - borderGap);
+                        
+                        pdf.rect(offsetL, offsetT, pw - offsetL - offsetR, ph - offsetT - offsetB);
+                    }
+                }
+            }).save().then(() => {
+                element.classList.remove('pdf-generating'); 
+                previewScreen.classList.add('hidden'); 
+                showToast("PDF download completed perfectly!");
+            });
+        }
+
+        // ================= WORD (.DOC) EXPORT =================
+        function downloadWord() {
+            showToast("Generating Word Document...");
+            
+            const element = document.getElementById('a4-preview');
+            const html = element.innerHTML;
+            
+            const header = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+                      xmlns:w='urn:schemas-microsoft-com:office:word' 
+                      xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <meta charset='utf-8'>
+                    <title>Word Pro Document</title>
+                    <style>
+                        body { font-family: 'Calibri', sans-serif; }
+                        table { width: 100%; border-collapse: collapse; }
+                        .text-center { text-align: center; }
+                        .font-bold { font-weight: bold; }
+                    </style>
+                </head><body>`;
+            const footer = "</body></html>";
+            const sourceHTML = header + html + footer;
+            
+            const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+            const fileDownload = document.createElement("a");
+            document.body.appendChild(fileDownload);
+            fileDownload.href = source;
+            fileDownload.download = 'word-pro-document.doc';
+            fileDownload.click();
+            document.body.removeChild(fileDownload);
+            
+            showToast("Word document downloaded successfully!");
+        }
+
+    </script>
+</body>
+</html>
