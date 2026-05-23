@@ -37,7 +37,7 @@
         }
 
         .compact-header {
-            border-bottom: 3.5px solid #1f2937;
+            border-bottom: 4px double #334155; 
             padding-bottom: 12px;
             display: flex;
             justify-content: space-between;
@@ -107,8 +107,8 @@
                 <span class="text-3d" style="font-family: 'Cinzel', serif; font-size: 38px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;">RADIANT LEARNERS HUB</span>
             </div>
             
-            <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
-                <span style="font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; color: #006633; text-transform: uppercase; border-bottom: 2px solid #9ca3af; padding-bottom: 3px; letter-spacing: 0.5px;">
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; padding-right: 15px;">
+                <span style="font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; color: #006633; text-transform: uppercase; border-bottom: 1.5px solid #9ca3af; padding-bottom: 3px; letter-spacing: 0.5px;">
                     INTEGRATED STUDY MATERIALS
                 </span>
                 <span id="dynamic-date" style="font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; color: #993300;"></span>
@@ -126,7 +126,7 @@
 
         <div class="p-6 space-y-5">
             
-            <!-- Stamp Upload Section (Permanent Fix) -->
+            <!-- Stamp Upload Section -->
             <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div id="stamp-preview-container" class="w-12 h-12 bg-white rounded-lg border border-blue-200 flex items-center justify-center overflow-hidden">
@@ -158,10 +158,14 @@
             <!-- Configuration Options -->
             <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
                 
-                <div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
+                <div class="flex flex-col gap-3 mb-4 pb-4 border-b border-gray-200">
                     <label class="flex items-center space-x-3 cursor-pointer">
                         <input type="checkbox" id="add-stamp" class="w-5 h-5">
                         <span class="font-bold text-gray-800">সব পেজে স্ট্যাম্প যুক্ত করুন</span>
+                    </label>
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox" id="add-page-num" class="w-5 h-5" checked>
+                        <span class="font-bold text-gray-800">নিচে পেজ নম্বর (1, 2, 3) যুক্ত করুন</span>
                     </label>
                 </div>
 
@@ -209,6 +213,7 @@
         
         const addHeaderCheck = document.getElementById('add-header');
         const addStampCheck = document.getElementById('add-stamp');
+        const addPageNumCheck = document.getElementById('add-page-num'); // New Option
         const headerRadios = document.getElementsByName('headerMode');
 
         const stampUpload = document.getElementById('stamp-upload');
@@ -224,6 +229,7 @@
             const settings = {
                 addHeader: addHeaderCheck.checked,
                 addStamp: addStampCheck.checked,
+                addPageNum: addPageNumCheck.checked, // Save Page Num Option
                 headerMode: headerMode
             };
             localStorage.setItem('pdfMachineSettings', JSON.stringify(settings));
@@ -234,14 +240,16 @@
             const saved = localStorage.getItem('pdfMachineSettings');
             if (saved) {
                 const settings = JSON.parse(saved);
-                addHeaderCheck.checked = settings.addHeader;
-                addStampCheck.checked = settings.addStamp;
+                addHeaderCheck.checked = settings.addHeader !== undefined ? settings.addHeader : true;
+                addStampCheck.checked = settings.addStamp !== undefined ? settings.addStamp : true;
+                addPageNumCheck.checked = settings.addPageNum !== undefined ? settings.addPageNum : true;
                 Array.from(headerRadios).forEach(r => {
                     if (r.value === settings.headerMode) r.checked = true;
                 });
             } else {
                 addHeaderCheck.checked = true;
                 addStampCheck.checked = true;
+                addPageNumCheck.checked = true;
                 headerRadios[0].checked = true;
             }
 
@@ -259,6 +267,7 @@
 
         addHeaderCheck.addEventListener('change', saveSettings);
         addStampCheck.addEventListener('change', saveSettings);
+        addPageNumCheck.addEventListener('change', saveSettings); // Event Listener
         Array.from(headerRadios).forEach(r => r.addEventListener('change', saveSettings));
         window.addEventListener('DOMContentLoaded', loadSettings);
 
@@ -268,19 +277,27 @@
             if(file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    const base64Img = event.target.result;
-                    // Save to local storage permanently
-                    localStorage.setItem('savedStampImage', base64Img);
-                    
-                    // Update UI
-                    stampPreviewImg.src = base64Img;
-                    stampPreviewImg.classList.remove('hidden');
-                    stampIcon.classList.add('hidden');
-                    stampStatusText.innerText = "নতুন স্ট্যাম্প যুক্ত হয়েছে!";
-                    stampStatusText.classList.remove('text-blue-600');
-                    stampStatusText.classList.add('text-green-600');
-                    
-                    showStatus("স্ট্যাম্প সফলভাবে সেভ হয়েছে!", "success");
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement("canvas");
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0);
+                        const purePngBase64 = canvas.toDataURL("image/png");
+                        
+                        localStorage.setItem('savedStampImage', purePngBase64);
+                        
+                        stampPreviewImg.src = purePngBase64;
+                        stampPreviewImg.classList.remove('hidden');
+                        stampIcon.classList.add('hidden');
+                        stampStatusText.innerText = "নতুন স্ট্যাম্প যুক্ত হয়েছে!";
+                        stampStatusText.classList.remove('text-blue-600');
+                        stampStatusText.classList.add('text-green-600');
+                        
+                        showStatus("স্ট্যাম্প সফলভাবে সেভ হয়েছে!", "success");
+                    };
+                    img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -320,6 +337,7 @@
             if (!selectedFile) return;
 
             const isStampChecked = addStampCheck.checked;
+            const isPageNumEnabled = addPageNumCheck.checked;
             const savedStamp = localStorage.getItem('savedStampImage');
             
             if (isStampChecked && !savedStamp) {
@@ -334,11 +352,14 @@
                 await showStatus("<div class='loader'></div> অরিজিনাল পিডিএফ পড়া হচ্ছে...", "info");
                 
                 const arrayBuffer = await selectedFile.arrayBuffer();
-                const { PDFDocument } = PDFLib;
+                const { PDFDocument, StandardFonts, rgb } = PDFLib;
                 
                 const sourcePdf = await PDFDocument.load(arrayBuffer);
                 const newPdfDoc = await PDFDocument.create();
                 const totalPages = sourcePdf.getPageCount();
+
+                // Font for Page Numbers
+                const fontForNumbers = await newPdfDoc.embedFont(StandardFonts.HelveticaBold);
 
                 // 1. Prepare Header
                 let headerImageEmbed = null;
@@ -353,25 +374,15 @@
                     headerImageEmbed = await newPdfDoc.embedPng(canvas.toDataURL('image/png'));
                 }
 
-                // 2. Prepare Stamp (From Local Storage - 100% Guaranteed to work)
+                // 2. Prepare Stamp
                 let stampImageEmbed = null;
                 if (isStampChecked && savedStamp) {
                     await showStatus("<div class='loader'></div> স্ট্যাম্প লোড করা হচ্ছে...", "info");
-                    
-                    // Check if the uploaded image is PNG or JPEG
-                    if(savedStamp.includes('image/png')) {
+                    try {
                         stampImageEmbed = await newPdfDoc.embedPng(savedStamp);
-                    } else if(savedStamp.includes('image/jpeg') || savedStamp.includes('image/jpg')) {
-                        stampImageEmbed = await newPdfDoc.embedJpg(savedStamp);
-                    } else {
-                        // If WebP or other, draw to canvas and convert to PNG first
-                        const img = new Image();
-                        img.src = savedStamp;
-                        await new Promise(res => img.onload = res);
-                        const cvs = document.createElement('canvas');
-                        cvs.width = img.width; cvs.height = img.height;
-                        cvs.getContext('2d').drawImage(img, 0, 0);
-                        stampImageEmbed = await newPdfDoc.embedPng(cvs.toDataURL('image/png'));
+                    } catch (e) {
+                        console.error("Stamp Error:", e);
+                        await showStatus("স্ট্যাম্পে ত্রুটি! দয়া করে নতুন করে ছবি দিন।", "error");
                     }
                 }
 
@@ -388,30 +399,22 @@
 
                     const needsHeader = isHeaderEnabled && (headerMode === 'all' || i === 0);
 
-                    // ============ HEADER PAGE LOGIC (PERFECT SCALING) ============
+                    // ============ HEADER PAGE LOGIC (PERFECT ALIGNMENT) ============
                     if (needsHeader && headerImageEmbed) {
                         const headerDims = headerImageEmbed.scale(1);
                         const drawWidth = width;
                         const headerHeightPoints = (headerDims.height * drawWidth) / headerDims.width;
                         
-                        // Scale slightly (94%) to ensure footer doesn't get cut off.
-                        const scaleFactor = 0.94;
-                        const scaledWidth = width * scaleFactor;
-                        const scaledHeight = height * scaleFactor;
-                        
-                        // Center horizontally
-                        const xOffset = (width - scaledWidth) / 2;
-                        
-                        // Lift it up just enough so the footer is visible, but the text starts right under the header!
-                        // yOffset = 2% of page height (Very minimal gap at the bottom, so top text sits high)
-                        const yOffset = height * 0.02; 
+                        // আগের মতো হুবহু এক লজিক (লক করা)
+                        const scaleY = 0.97;
+                        const shiftY = -25;
                         
                         // Draw Original Content
                         newPage.drawPage(embeddedPage, {
-                            x: xOffset,
-                            y: yOffset, 
-                            width: scaledWidth,
-                            height: scaledHeight
+                            x: 0,
+                            y: shiftY, 
+                            width: width,             
+                            height: height * scaleY   
                         });
 
                         // Draw Header at the very top
@@ -436,6 +439,21 @@
                             width: stampSize,
                             height: stampSize,
                             opacity: 0.15              // Transparent watermark
+                        });
+                    }
+
+                    // ============ PAGE NUMBER LOGIC (NEW) ============
+                    if (isPageNumEnabled) {
+                        const pageNumText = (i + 1).toString();
+                        const fontSize = 11;
+                        const textWidth = fontForNumbers.widthOfTextAtSize(pageNumText, fontSize);
+                        
+                        newPage.drawText(pageNumText, {
+                            x: (width / 2) - (textWidth / 2),
+                            y: 15, // একদম নিচে মাঝখানে (15 points উপর থেকে)
+                            size: fontSize,
+                            font: fontForNumbers,
+                            color: rgb(0.2, 0.2, 0.2) // সুন্দর গ্রে কালার
                         });
                     }
                 }
